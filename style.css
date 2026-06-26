@@ -56,14 +56,14 @@ header button:hover {
 
 #add-btn {
   white-space: nowrap;
-  background: #4285f4;
+  background: #1558b0;
   color: #fff;
-  border-color: #4285f4;
+  border-color: #1558b0;
 }
 
 #add-btn:hover {
-  background: #3367d6;
-  border-color: #3367d6;
+  background: #0d4a9e;
+  border-color: #0d4a9e;
 }
 
 /* ── Calendar grid ───────────────────────────────────── */
@@ -110,6 +110,12 @@ main {
   background: #fafafa;
 }
 
+.day-cell:focus {
+  outline: 2px solid #1558b0;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
 .day-number {
   display: block;
   text-align: right;
@@ -120,7 +126,7 @@ main {
 }
 
 .day-cell.today .day-number {
-  background: #4285f4;
+  background: #1558b0;
   color: #fff;
   border-radius: 50%;
   width: 22px;
@@ -136,7 +142,7 @@ main {
 }
 
 .day-cell.other-month .day-number {
-  color: #bbb;
+  color: #888;
 }
 
 .events-container {
@@ -151,7 +157,7 @@ main {
 
 .event-chip {
   display: block;
-  background: #4285f4;
+  background: #1558b0;
   color: #fff;
   border-radius: 3px;
   font-size: 0.7rem;
@@ -164,7 +170,12 @@ main {
 }
 
 .event-chip:hover {
-  background: #3367d6;
+  background: #0d4a9e;
+}
+
+.event-chip:focus {
+  outline: 2px solid #fff;
+  outline-offset: -1px;
 }
 
 /* ── Modal ───────────────────────────────────────────── */
@@ -210,13 +221,14 @@ main {
   font-size: 0.9rem;
   font-family: inherit;
   color: #1a1a1a;
-  outline: none;
   transition: border-color 0.15s;
 }
 
 #event-form input:focus,
 #event-form textarea:focus {
-  border-color: #4285f4;
+  border-color: #1558b0;
+  outline: 2px solid #1558b0;
+  outline-offset: 1px;
 }
 
 #event-form textarea {
@@ -251,14 +263,14 @@ main {
 }
 
 #save-btn {
-  background: #4285f4;
+  background: #1558b0;
   color: #fff;
-  border-color: #4285f4;
+  border-color: #1558b0;
 }
 
 #save-btn:hover {
-  background: #3367d6;
-  border-color: #3367d6;
+  background: #0d4a9e;
+  border-color: #0d4a9e;
 }
 
 #delete-btn {
@@ -273,7 +285,7 @@ main {
 }
 
 .error {
-  color: #d32f2f;
+  color: #b71c1c;
   font-size: 0.8rem;
   background: #fdecea;
   border: 1px solid #f5c6c6;

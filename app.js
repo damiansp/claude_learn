@@ -4,6 +4,7 @@ let currentYear;
 let currentMonth;
 let events = [];
 let editingId = null;
+let modalOpener = null;
 
 const todayISO = (() => {
   const d = new Date();
@@ -50,6 +51,7 @@ function renderCalendar() {
 
     if (dayNum < 1 || dayNum > daysInMonth) {
       cell.className = 'day-cell other-month';
+      cell.setAttribute('role', 'gridcell');
       // Show neighbouring month day numbers for visual continuity
       if (dayNum < 1) {
         const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
@@ -69,12 +71,15 @@ function renderCalendar() {
 
     const isoDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
     cell.className = 'day-cell';
+    cell.setAttribute('role', 'gridcell');
+    cell.setAttribute('tabindex', '0');
     cell.dataset.date = isoDate;
     if (isoDate === todayISO) cell.classList.add('today');
 
     const num = document.createElement('span');
     num.className = 'day-number';
     num.textContent = dayNum;
+    if (isoDate === todayISO) num.setAttribute('aria-label', `${dayNum}, today`);
     cell.appendChild(num);
 
     const container = document.createElement('div');
@@ -87,9 +92,12 @@ function renderCalendar() {
     dayEvents.forEach(ev => {
       const chip = document.createElement('div');
       chip.className = 'event-chip';
+      chip.setAttribute('role', 'button');
+      chip.setAttribute('tabindex', '0');
       chip.dataset.id = ev.id;
-      chip.textContent = ev.startTime ? `${ev.startTime} ${ev.title}` : ev.title;
-      chip.title = ev.title;
+      const chipLabel = ev.startTime ? `${ev.startTime} ${ev.title}` : ev.title;
+      chip.textContent = chipLabel;
+      chip.setAttribute('aria-label', chipLabel);
       container.appendChild(chip);
     });
 
@@ -98,9 +106,29 @@ function renderCalendar() {
   }
 }
 
+// ── Focus trap ────────────────────────────────────────
+
+function trapFocus(e) {
+  const modal = document.getElementById('modal');
+  const focusable = Array.from(
+    modal.querySelectorAll('button, input, textarea, [tabindex]:not([tabindex="-1"])')
+  ).filter(el => !el.disabled && !el.classList.contains('hidden'));
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+
+  if (e.key !== 'Tab') return;
+  if (e.shiftKey) {
+    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+  } else {
+    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+}
+
 // ── Modal ─────────────────────────────────────────────
 
 function openModal(date, eventId) {
+  modalOpener = document.activeElement;
   editingId = eventId || null;
 
   const overlay = document.getElementById('modal-overlay');
@@ -128,13 +156,17 @@ function openModal(date, eventId) {
   }
 
   overlay.classList.remove('hidden');
+  document.getElementById('modal').addEventListener('keydown', trapFocus);
   document.getElementById('f-title').focus();
 }
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
+  document.getElementById('modal').removeEventListener('keydown', trapFocus);
   document.getElementById('event-form').reset();
   editingId = null;
+  if (modalOpener && typeof modalOpener.focus === 'function') modalOpener.focus();
+  modalOpener = null;
 }
 
 // ── Event handlers ────────────────────────────────────
@@ -243,10 +275,22 @@ function init() {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
   });
 
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !document.getElementById('modal-overlay').classList.contains('hidden')) {
+      closeModal();
+    }
+  });
+
   document.getElementById('cancel-btn').addEventListener('click', closeModal);
   document.getElementById('event-form').addEventListener('submit', handleSubmit);
   document.getElementById('delete-btn').addEventListener('click', handleDelete);
   document.getElementById('calendar').addEventListener('click', handleCalendarClick);
+  document.getElementById('calendar').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCalendarClick(e);
+    }
+  });
 }
 
 init();
