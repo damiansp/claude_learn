@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <button id="prev-btn" aria-label="Previous month">&#8249;</button>
+    <h1 id="month-label"></h1>
+    <button id="next-btn" aria-label="Next month">&#8250;</button>
+    <button id="add-btn">+ Add Event</button>
+  </header>
+
+  <main>
+    <div id="calendar">
+      <div class="day-header"><span class="long">Sunday</span><span class="short">Sun</span></div>
+      <div class="day-header"><span class="long">Monday</span><span class="short">Mon</span></div>
+      <div class="day-header"><span class="long">Tuesday</span><span class="short">Tue</span></div>
+      <div class="day-header"><span class="long">Wednesday</span><span class="short">Wed</span></div>
+      <div class="day-header"><span class="long">Thursday</span><span class="short">Thu</span></div>
+      <div class="day-header"><span class="long">Friday</span><span class="short">Fri</span></div>
+      <div class="day-header"><span class="long">Saturday</span><span class="short">Sat</span></div>
+    </div>
+  </main>
+
+  <div id="modal-overlay" class="hidden">
+    <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h2 id="modal-title">Add Event</h2>
+      <form id="event-form" novalidate>
+        <p id="form-error" class="error hidden"></p>
+
+        <label for="f-title">Title <span class="required">*</span></label>
+        <input id="f-title" type="text" placeholder="Event title" autocomplete="off">
+
+        <label for="f-date">Date <span class="required">*</span></label>
+        <input id="f-date" type="date">
+
+        <label for="f-start">Start time</label>
+        <input id="f-start" type="time">
+
+        <label for="f-end">End time</label>
+        <input id="f-end" type="time">
+
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" rows="3" placeholder="Optional notes"></textarea>
+
+        <div class="form-actions">
+          <button type="submit" id="save-btn">Save</button>
+          <button type="button" id="delete-btn" class="hidden">Delete</button>
+          <button type="button" id="cancel-btn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
